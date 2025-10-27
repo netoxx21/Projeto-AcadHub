@@ -1,46 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="icon" type="image/png" sizes="512x512" href="/Projeto-AcadHub/Frontend/js/img/logo.png?v=6">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro-AcadHub</title>
+    <link rel="stylesheet" href="Frontend/css/style.css">
 </head>
-<body>
-     <h1>Tela de Cadastro</h1>
-    <form id="form-cadastro">
+<body class="login-page">
+     <body>
+    
+    <main class="container">
         
-        <div>
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" required 
-                       placeholder="Seu nome completo">
+        <div class="lado-azul">
+            <div class="conteudo-lado-azul">
+                <img src="/Projeto-AcadHub/Frontend/js/img/logo.png" alt="Ícone AcadHub" class="imagem-centralizada">
+                
+                <div class="link-cadastro">
+                    Já tem uma conta? <a href="login.html">Fazer Login</a>
+                </div>
+            </div>
         </div>
+        
+        <div class="lado-branco">
+            
+            <h1>Cadastro</h1>
+            
+            <form id="form-cadastro">
+                
+                <div class="input-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" required placeholder="Seu nome completo">
+                </div>
 
-        <div>
-            <label for="email">E-mail:</label>
-            <input type="email" id="email" name="email" required 
-                       placeholder="exemplo@acadhub.com">
+                <div class="input-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required placeholder="exemplo@acadhub.com">
+                </div>
+
+                <div class="input-group">
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" name="senha" required placeholder="Mínimo 8 caracteres">
+                </div>
+
+                <div class="input-group">
+                    <label for="confirmar-senha">Confirme a Senha:</label>
+                    <input type="password" id="confirmar-senha" name="confirmar-senha" required placeholder="Confirme sua senha">
+                </div>
+
+                <button type="submit" class="btn-primary">Cadastrar</button>
+            </form>
+
         </div>
-
-        <div>
-            <label for="senha">Senha:</label>
-            <input type="password" id="senha" name="senha" required 
-                       placeholder="Mínimo 8 caracteres">
-        </div>
-
-        <div>
-            <label for="confirmar-senha">Confirme a Senha:</label>
-            <input type="password" id="confirmar-senha" name="confirmar-senha" required>
-        </div>
-
-            <button type="submit">Cadastrar</button>
-        </form>
-
-        <p>Já tem uma conta? <a href="login.html">Faça Login aqui.</a></p>
-
     </main>
-    </form>
-
-
-    <script src="js/login.js"></script>
+    <script src="js/cadastro.js"></script>
 </body>
 </html>
