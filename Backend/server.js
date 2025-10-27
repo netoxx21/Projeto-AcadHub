@@ -3,7 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const bcrypt = require('bcrypt'); 
 const jwt = require('jsonwebtoken');
-const db = require('./db');     
+const db = require('./db');
+const { protect } = require('./authMiddleware');     
 const app = express();
 const PORT = process.env.PORT || 4000;
 
@@ -101,4 +102,17 @@ app.post('/api/login', async (req, res) => {
         console.error('Erro durante o login:', error.stack);
         res.status(500).json({ error: 'Erro interno no servidor.' });
     }
+});
+
+// ---------------------------------------- Rota Protegida de Teste (/api/user/profile)
+// Requer um JWT válido no cabeçalho Authorization
+
+
+app.get('/api/user/profile', protect, (req, res) => {
+    // Se o código chegar aqui, o token é válido!
+    res.json({
+        message: 'Acesso concedido a rota protegida!',
+        user_id_logado: req.user.id, // Acessando os dados injetados pelo Middleware
+        email_logado: req.user.email
+    });
 });
