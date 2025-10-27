@@ -1,4 +1,7 @@
-----AcadHub----
+# AcadHub 
+## Repositorio de resumos academico.
 
- É um sistema de repositório de resumos acadêmicos que tem a finalidade de facilitar a comunicação e colaboração entre os estudantes da universidade. 
- 
+Nessa versão:
+
+- Upload e compartilhamento de arquivos
+- Acesso a arquivos compartilhados
