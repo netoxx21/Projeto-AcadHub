@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const bcrypt = require('bcrypt'); 
+const jwt = require('jsonwebtoken');
 const db = require('./db');     
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -15,14 +16,11 @@ app.get('/api/ping', (req, res) => {
 app.post('/api/register', async (req, res) => {
     const { nome, email, senha } = req.body;
 
-    // 1. Validação Simples (Obrigatória)
     if (!nome || !email || !senha) {
         return res.status(400).json({ error: 'Todos os campos (nome, email, senha) são obrigatórios.' });
     }
 
     try {
-        // 2. Criptografia da Senha (Segurança!)
-        // O SaltRounds (10) define a complexidade da criptografia.
         const saltRounds = 10;
         const senhaHash = await bcrypt.hash(senha, saltRounds);
 
@@ -31,18 +29,16 @@ app.post('/api/register', async (req, res) => {
         
         const values = [nome, email, senhaHash];
         
-        // 4. Executar a Query no Banco de Dados
         const result = await db.query(query, values);
         const newUser = result.rows[0];
 
-        // 5. Sucesso (Status 201: Created)
         res.status(201).json({ 
             message: 'Usuário cadastrado com sucesso!', 
             user: newUser
         });
 
     } catch (error) {
-        // 6. Tratamento de Erro (Ex: Email já cadastrado)
+
         if (error.code === '23505' && error.constraint === 'users_email_key') {
             return res.status(409).json({ error: 'Este e-mail já está cadastrado.' });
         }
@@ -53,4 +49,56 @@ app.post('/api/register', async (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Servidor Express rodando em http://localhost:${PORT}`);
+});
+
+// Rota de login 
+
+app.post('/api/login', async (req, res) => {
+    const { email, senha } = req.body;
+
+    if (!email || !senha) {
+        return res.status(400).json({ error: 'E-mail e senha são obrigatórios.' });
+    }
+
+    try {
+        const userQuery = 'SELECT id, nome, email, senha_hash FROM users WHERE email = $1';
+        const result = await db.query(userQuery, [email]);
+        const user = result.rows[0];
+
+        if (!user) {
+            return res.status(401).json({ error: 'Credenciais inválidas.' });
+        }
+
+        const match = await bcrypt.compare(senha, user.senha_hash);
+
+        if (!match) {
+            return res.status(401).json({ error: 'Credenciais inválidas.' });
+        }
+        
+        
+        const payload = {
+            id: user.id,
+            email: user.email
+        };
+        
+        const token = jwt.sign(
+            payload, 
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        res.json({
+            message: 'Login bem-sucedido!',
+            token,
+            user: {
+                id: user.id,
+                nome: user.nome,
+                email: user.email
+            }
+        });
+
+    } catch (error) {
+        console.error('Erro durante o login:', error.stack);
+        res.status(500).json({ error: 'Erro interno no servidor.' });
+    }
 });
